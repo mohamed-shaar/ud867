@@ -14,14 +14,14 @@ import com.udacity.gradle.builditbigger.backend.myApi.MyApi;
 
 import java.io.IOException;
 
-import com.example.androidjokelibrary.*;
+import com.example.androidjokelibrary.JokeActivity;
 
-class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> {
-    private static MyApi myApiService = null;
+class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
+    public static MyApi myApiService = null;
     private Context context;
 
     @Override
-    protected String doInBackground(Pair<Context, String>... params) {
+    protected String doInBackground(Context...params) {
         if(myApiService == null) {  // Only do this once
             MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
@@ -40,11 +40,11 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
             myApiService = builder.build();
         }
 
-        context = params[0].first;
-        String name = params[0].second;
+        context = params[0];
 
         try {
-            return myApiService.sayHi(name).execute().getData();
+            //return myApiService.getRandomJokeService().execute().getData();
+            return myApiService.sayHi("hi").getName();
         } catch (IOException e) {
             return e.getMessage();
         }
@@ -53,8 +53,9 @@ class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> 
     @Override
     protected void onPostExecute(String result) {
         Toast.makeText(context, result, Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(context, JokesActivity.class);
-        intent.putExtra("extra_joke", result);
+        Intent intent = new Intent(context, JokeActivity.class);
+        intent.putExtra(JokeActivity.EXTRA_JOKE, result);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 }
