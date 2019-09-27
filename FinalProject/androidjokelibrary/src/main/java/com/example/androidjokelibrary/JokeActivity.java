@@ -14,14 +14,15 @@ public class JokeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_joke);
         Intent intent = getIntent();
-        String joke  = intent.getStringExtra(EXTRA_JOKE);
+
 
         TextView tv_joke = findViewById(R.id.tv_joke);
-        if (joke.isEmpty()){
-            tv_joke.setText(getString(R.string.joke_unavailable_message));
+        if (intent.hasExtra(EXTRA_JOKE)){
+            String joke  = intent.getStringExtra(EXTRA_JOKE);
+            tv_joke.setText(joke);
         }
         else{
-            tv_joke.setText(joke);
+            tv_joke.setText(getString(R.string.joke_unavailable_message));
         }
     }
 }
